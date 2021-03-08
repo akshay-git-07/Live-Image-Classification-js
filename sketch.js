@@ -6,7 +6,10 @@ const startBtn = document.getElementById("startBtn");
 let stream;
 let classifier;
 let keepDetecting;
-  
+
+// Getting ready the Speech Synthesizer
+let utter = new SpeechSynthesisUtterance();
+utter.rate = 1.5;    
 
 // Create a webcam capture
 async function startStreaming() {
@@ -26,6 +29,11 @@ function stopStreaming() {
   });
 }
 
+// Text to Speech
+function speak() {
+  speechSynthesis.speak(utter);
+}
+
 // Loading the classifier with Custom Model
 classifier = ml5.imageClassifier("./resources/model.json", () => console.log("Model loaded"));
 
@@ -33,9 +41,12 @@ classifier = ml5.imageClassifier("./resources/model.json", () => console.log("Mo
 function startDetecting() {
   if (keepDetecting) {
     classifier.predict(video, (err, results) => {
+
+      utter.text = results[0].label;
       result.innerHTML = results[0].label;
       confidence.innerHTML = Math.round(results[0].confidence * 100) + '%';
-      startDetecting();
+      speak();
+      utter.onend = () => startDetecting();
     });
   }
   else{
