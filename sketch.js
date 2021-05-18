@@ -7,6 +7,9 @@ let stream;
 let classifier;
 let keepDetecting;
 
+var width = 600;
+var height = 400;
+
 // Getting ready the Speech Synthesizer
 let utter = new SpeechSynthesisUtterance();
 utter.rate = 1.5;    
@@ -14,11 +17,12 @@ utter.rate = 1.5;
 // Create a webcam capture
 async function startStreaming() {
   try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: {width: 480, height: 300} });
+    stream = await navigator.mediaDevices.getUserMedia({ video: {width: width, height: height} });
     video.srcObject = stream;
     video.play();
   } catch (err) {
     alert("Please check your camera permissions.");
+    // alert(err);
   }
 }
 
@@ -38,15 +42,21 @@ function speak() {
 classifier = ml5.imageClassifier("./resources/model.json", () => console.log("Model loaded"));
 
 // Start to classify video
-function startDetecting() {
+async function startDetecting() {
+  console.log('detecting');
   if (keepDetecting) {
+    console.log('keep detecting');
     classifier.predict(video, (err, results) => {
-
-      utter.text = results[0].label;
-      result.innerHTML = results[0].label;
-      confidence.innerHTML = Math.round(results[0].confidence * 100) + '%';
-      speak();
-      utter.onend = () => startDetecting();
+      console.log('predict');
+      if (err) {
+        console.log(err);
+      } else {
+        utter.text = results[0].label;
+        result.innerHTML = results[0].label;
+        confidence.innerHTML = Math.round(results[0].confidence * 100) + '%';
+        speak();
+        utter.onend = () => startDetecting();
+      }
     });
   }
   else{
@@ -67,10 +77,35 @@ startBtn.addEventListener("click", () => {
     startBtn.innerText = 'Stop';
     startStreaming();
     keepDetecting = true;
-    startDetecting();
+    // startDetecting();
   } else {
     startBtn.innerText = 'Start';
     stopDetecting();
     stopStreaming();
+  }
+});
+
+
+var width830 = window.matchMedia("(max-width: 830px)");
+width830.addListener(() => {
+  if (width830.matches) {
+    height = 300;
+    width = 480;
+  }
+});
+
+var width600 = window.matchMedia("(max-width: 600px)");
+width600.addListener(() => {
+  if (width600.matches) {
+    height = 280;
+    width = 380;
+  }
+});
+
+var width400 = window.matchMedia("(max-width: 400px)");
+width400.addListener(() => {
+  if (width400.matches) {
+    height = 280;
+    width = 320;
   }
 });
