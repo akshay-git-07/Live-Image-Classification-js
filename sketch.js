@@ -14,13 +14,39 @@ var height = 400;
 let utter = new SpeechSynthesisUtterance();
 utter.rate = 1;    
 
+// Checking if the device has camera support or not
+if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
+  console.log("Good to go.")
+} else {
+  utter.text = "Your device doesn't have camera support.";
+  speak();
+  alert("Your device doesn't have camera support.");
+}
+
+let faceMode;
+
+// Checking if the device is mobile or pc
+if (/Android | webOS | iPhone | iPad | iPod | BlackBerry | IEMobile | Opera Mini/i.test (navigator.userAgent)) {
+  faceMode = 'environment';
+} else {
+  faceMode = 'user';
+}
+
 // Create a webcam capture
 async function startStreaming() {
   try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: {width: width, height: height} });
+    stream = await navigator.mediaDevices.getUserMedia({ video: {
+      width: width,
+      height: height,
+      facingMode: {
+        exact: faceMode
+      }
+    } });
     video.srcObject = stream;
     video.play();
   } catch (err) {
+    utter.text = "Please check your camera permissions.";
+    speak();
     alert("Please check your camera permissions.");
     startBtn.innerText = 'Start';
     // alert(err);
@@ -84,6 +110,7 @@ startBtn.addEventListener("click", () => {
 });
 
 
+// Adjusting the video ratio according to the screen size
 var width830 = window.matchMedia("(max-width: 830px)");
 width830.addListener(() => {
   if (width830.matches) {
