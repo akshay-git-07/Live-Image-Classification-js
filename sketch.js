@@ -12,7 +12,7 @@ var height = 400;
 
 // Getting ready the Speech Synthesizer
 let utter = new SpeechSynthesisUtterance();
-utter.rate = 1.5;    
+utter.rate = 1;    
 
 // Create a webcam capture
 async function startStreaming() {
@@ -22,6 +22,7 @@ async function startStreaming() {
     video.play();
   } catch (err) {
     alert("Please check your camera permissions.");
+    startBtn.innerText = 'Start';
     // alert(err);
   }
 }
@@ -43,13 +44,10 @@ classifier = ml5.imageClassifier("./resources/model.json", () => console.log("Mo
 
 // Start to classify video
 async function startDetecting() {
-  console.log('detecting');
   if (keepDetecting) {
-    console.log('keep detecting');
     classifier.predict(video, (err, results) => {
-      console.log('predict');
       if (err) {
-        console.log(err);
+        result.innerHTML = 'Some error occurred. Please refresh the browser.';
       } else {
         utter.text = results[0].label;
         result.innerHTML = results[0].label;
@@ -77,7 +75,7 @@ startBtn.addEventListener("click", () => {
     startBtn.innerText = 'Stop';
     startStreaming();
     keepDetecting = true;
-    // startDetecting();
+    startDetecting();
   } else {
     startBtn.innerText = 'Start';
     stopDetecting();
