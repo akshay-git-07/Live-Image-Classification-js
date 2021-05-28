@@ -30,6 +30,7 @@ if (/Android | webOS | iPhone | iPad | iPod | BlackBerry | IEMobile | Opera Mini
   faceMode = 'environment';
 } else {
   faceMode = 'user';
+  video.classList.add('rotate');
 }
 
 // Create a webcam capture
