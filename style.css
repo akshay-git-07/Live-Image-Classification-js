@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap');
+
 *{
     margin: 0;
     padding: 0;
@@ -13,6 +15,7 @@ body{
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    font-family: 'Poppins', sans-serif;
 }
 
 .navbar{
@@ -120,14 +123,19 @@ body{
 
 .directions h1{
     margin-bottom: 10px;
+    color: #f00084;
 }
 
 .directions ul li{
     margin-bottom: 5px;
+    color: #000;
 }
+
 
 .directions ul li p{
     font-size: 1.4rem;
+    color: #000;
+    font-weight: 600;
 }
 
 footer{
