@@ -80,7 +80,9 @@ async function startDetecting() {
         result.innerHTML = results[0].label;
         confidence.innerHTML = Math.round(results[0].confidence * 100) + '%';
         speak();
-        utter.onend = () => startDetecting();
+        setTimeout(function() {
+          startDetecting();
+        }, 1000);
       }
     });
   }
